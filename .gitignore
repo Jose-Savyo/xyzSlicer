@@ -1,0 +1,22 @@
+# --- Compilação e Build ---
+build/
+bin/
+obj/
+*.a
+*.so
+*.out
+
+# --- VS Code ---
+.vscode/
+.history/
+*.code-workspace
+
+# --- Arquivos de Dados (Não subir arquivos pesados) ---
+*.stl
+*.cli
+*.gcode
+*.db3
+
+# --- Temporários do Sistema ---
+.DS_Store
+Thumbs.db
