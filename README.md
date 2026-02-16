@@ -1,61 +1,53 @@
-# xyzSlicer - WAAM Engine 🛠️⚡
+# xyzSlicer - WAAM Geometry Engine 🛠️⚡
 
-xyzSlicer é um fatiador geométrico de alto desempenho desenvolvido para Manufatura Aditiva a Arco Elétrico (WAAM). O projeto foca na geração de trajetórias para robôs de deposição metálica, integrando algoritmos de geometria computacional para garantir precisão e robustez industrial.
-🚀 Estado Atual do Projeto
+**xyzSlicer** is a specialized slicing engine developed for **Wire Arc Additive Manufacturing (WAAM)**. Unlike conventional plastic slicers, this engine is tailored for metal deposition, handling large bead widths and the specific requirement of "oversizing" for post-process machining.
 
-O projeto encontra-se na Fase 2: Processamento Geométrico e Trajetórias. Atualmente, a engine é capaz de carregar malhas complexas, realizar intersecções em planos Z e processar polígonos para preenchimento concêntrico.
-Funcionalidades Implementadas:
+---
 
-    AABB Tree Indexing: Utilização de árvores de intersecção aceleradas via CGAL para fatiamento de alto desempenho.
+## 🏗️ System Architecture
 
-    Exact Predicates: Uso de kernels de aritmética exata para evitar erros de precisão em intersecções complexas.
+The project integrates high-precision 3D geometric processing with 2D trajectory manipulation:
 
-    União de Polígonos: Conversão de segmentos de reta soltos em loops fechados via Clipper2.
+- **Geometric Back-end:** Built with [CGAL](https://www.cgal.org/) (Computational Geometry Algorithms Library). It utilizes the **Exact Predicates Kernel** to eliminate rounding errors during complex intersections.
+- **Trajectory Processing:** Integrated with [Clipper2](https://github.com/AngusJohnson/Clipper2) for polygon union and offsetting (inflating/deflating) operations at a micrometric scale using 64-bit integer arithmetic.
 
-    Oversizing (Sobremetal): Lógica integrada para adicionar material extra para processos de usinagem posterior.
 
-    Preenchimento Concêntrico: Geração de anéis internos com controle experimental de overlap (sobreposição).
 
-🏗️ Arquitetura Técnica
+---
 
-O projeto utiliza uma ponte de dados entre duas bibliotecas líderes de mercado:
+## 🚀 Key Features
 
-    CGAL (Computational Geometry Algorithms Library): Responsável por toda a lógica 3D, carregamento de STL e intersecção de planos.
+### 1. Accelerated Slicing
+- Employs **AABB Trees** (Axis-Aligned Bounding Boxes) for spatial indexing. This allows the intersection between the slicing plane and thousands of mesh triangles to occur in milliseconds.
 
-    Clipper2: Responsável pela manipulação 2D, offsets de contorno e operações booleanas de polígonos em escala micrométrica (utilizando aritmética de inteiros 64-bit).
+### 2. Filling Strategy (Infill)
+- **Concentric Infill:** Optimized to minimize weld arc ignitions, maintaining thermal continuity throughout the process.
+- **Overlap Control:** Experimental adjustment of lateral overlap between beads to ensure 100% part density and prevent porosity.
 
-🛠️ Requisitos e Compilação
-Dependências
+### 3. Hybrid Manufacturing Focus
+- **Oversizing (Machining Allowance):** Automatic generation of extra material on external and internal faces to ensure a sufficient margin for post-process milling/finishing.
 
-    CGAL 5.x+
 
-    Clipper2
 
-    Boost (especialmente boost::variant para intersecções)
+---
 
-    CMake e G++ (suporte a C++17 ou superior)
+## 🛠️ Build and Execution
 
-Como Compilar
-Bash
+### Prerequisites
+* **Compiler:** GCC 11+ or Clang (C++17 support)
+* **Libraries:** CGAL, Clipper2, Boost
+* **Build System:** CMake
+
+### Installation
+```bash
+# Clone the repository
+git clone [https://github.com/your-username/xyzSlicer.git](https://github.com/your-username/xyzSlicer.git)
+cd xyzSlicer
+
+# Compile the project
 mkdir build && cd build
 cmake ..
 make
 
-Como Executar
-Bash
-
-./validator <caminho_para_arquivo.stl>
-
-🧪 Próximos Passos (Roadmap)
-
-    [X] Correção de Intersecção: Refinar o filtro de tipos no boost::get para garantir a captura de todos os segmentos em planos Z arbitrários.
-
-    [ ] Translação Automática: Implementar o reposicionamento automático da peça para o plano de impressão (Z=0).
-
-    [ ] G-Code Generator: Criar a classe para exportação de trajetórias com injeção de script para sonda de zeramento (probe).
-
-    [ ] Interface de Configuração: Suporte para leitura de parâmetros experimentais (bead_width, overlap) via arquivo externo.
-
-👨‍💻 Autor
-
-Desenvolvido como parte de um estudo aprofundado em robótica e automação para manufatura aditiva.
+# Run with an STL file
+./validator ../STLfiles/body.stl
