@@ -1,6 +1,8 @@
 #include "Slicer.hpp"
 #include <CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h>
 #include <CGAL/AABB_tree.h>
+#include <CGAL/Polygon_mesh_processing/bbox.h>
+#include <CGAL/aff_transformation_tags.h>
 #include "clipper2/clipper.h"
 #include <iostream>
 
@@ -91,6 +93,9 @@ Clipper2Lib::Paths64 MetalSlicer::generateConcentricInfill(
     double oversize,     // Material extra para usinagem (ex: 1.5mm)
     double scale) 
 {
+    // Teste 1: O contorno original tem pontos?
+    std::cout << "DEBUG: Pontos no contorno original: " << boundary[0].size() << std::endl;
+
     Paths64 current_layer;
     
     // PASSO 1: Aplicar Sobremetal (Oversizing)
@@ -98,6 +103,7 @@ Clipper2Lib::Paths64 MetalSlicer::generateConcentricInfill(
     current_layer = InflatePaths(boundary, oversize * scale, 
                                  JoinType::Miter, EndType::Polygon);
 
+      
     Paths64 all_trajectories;
     Paths64 last_offset = current_layer;
     
@@ -106,7 +112,13 @@ Clipper2Lib::Paths64 MetalSlicer::generateConcentricInfill(
 
     // PASSO 2: Gerar anéis concêntricos
     // O passo do offset considera a largura do cordão e a sobreposição experimental
+        // Teste 2: O oversize destruiu o polígono?
+    if (current_layer.empty()) {
+        std::cout << "DEBUG: Polígono desapareceu após o Oversize!" << std::endl;
+        return {};
+    }
     double step = -bead_width * (1.0 - overlap_pct) * scale;
+    std::cout << "DEBUG: Step calculado: " << step << std::endl;
 
     while (true) {
         last_offset = InflatePaths(last_offset, step, JoinType::Miter, EndType::Polygon);
@@ -117,6 +129,12 @@ Clipper2Lib::Paths64 MetalSlicer::generateConcentricInfill(
     }
 
     return all_trajectories;
+}
+
+CGAL::Bbox_3 MetalSlicer::getMeshBoundingBox() const {
+    // Para Surface_mesh, a forma mais segura é usar o namespace PMP (Polygon Mesh Processing)
+    // ou iterar sobre os pontos, mas o CGAL oferece este atalho:
+    return CGAL::Polygon_mesh_processing::bbox(mesh);
 }
 
 size_t MetalSlicer::getFaceCount() const {

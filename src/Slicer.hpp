@@ -6,6 +6,7 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
+#include <CGAL/Bbox_3.h>
 #include "clipper2/clipper.h" // Reconhecer Paths64
 #include <string>
 #include <vector>
@@ -44,10 +45,12 @@ public:
     // Preenchimento concentrico
     Clipper2Lib::Paths64 generateConcentricInfill(
     const Clipper2Lib::Paths64& boundary, 
-    double bead_width,   // Largura do cordão (ex: 5.0mm)
-    double overlap_pct,  // Sobreposição (ex: 0.7 para 70%)
-    double oversize,     // Material extra para usinagem (ex: 1.5mm)
+    double bead_width,   // Largura do cordão
+    double overlap_pct,  // Sobreposição 
+    double oversize,     // Material extra para usinagem 
     double scale);
+
+    CGAL::Bbox_3 getMeshBoundingBox() const;
 
 private:
     Mesh mesh;
