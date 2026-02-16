@@ -6,7 +6,9 @@
 #include <CGAL/AABB_tree.h>
 #include <CGAL/AABB_traits.h>
 #include <CGAL/AABB_face_graph_triangle_primitive.h>
+#include "clipper2/clipper.h" // Reconhecer Paths64
 #include <string>
+#include <vector>
 
 // Definições de tipos do CGAL para clareza
 typedef CGAL::Exact_predicates_exact_constructions_kernel Kernel;
@@ -30,6 +32,14 @@ public:
 
     // Apenas para verificação: retorna o número de faces da malha
     size_t getFaceCount() const;
+
+    // --- Novos métodos para a Fase 2 ---
+    
+    // Realiza a intersecção do plano Z com a AABB Tree
+    Clipper2Lib::Paths64 sliceLayer(double z_height, double scale);
+
+    // Une os segmentos gerados e limpa a geometria
+    Clipper2Lib::Paths64 joinSegments(const std::vector<Kernel::Segment_3>& segments, double scale);
 
 private:
     Mesh mesh;

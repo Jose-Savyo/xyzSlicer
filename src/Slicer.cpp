@@ -1,5 +1,6 @@
 #include "Slicer.hpp"
 #include <CGAL/Polygon_mesh_processing/IO/polygon_mesh_io.h>
+#include <CGAL/AABB_tree.h>
 #include "clipper2/clipper.h"
 #include <iostream>
 
@@ -28,7 +29,7 @@ void MetalSlicer::buildIndex() {
 
 using namespace Clipper2Lib;
 
-Paths64 joinSegments(const std::vector<Kernel::Segment_3>& segments, double scale) {
+Clipper2Lib::Paths64 MetalSlicer::joinSegments(const std::vector<Kernel::Segment_3>& segments, double scale) {
     Paths64 subjects;
 
     for (const auto& seg : segments) {
@@ -57,6 +58,30 @@ Paths64 joinSegments(const std::vector<Kernel::Segment_3>& segments, double scal
     Paths64 simplified = SimplifyPaths(joined, 0.02 * scale);
 
     return simplified;
+}
+
+Clipper2Lib::Paths64 MetalSlicer::sliceLayer(double z_height, double scale) {
+    // 1. Define o plano horizontal (Z = z_height)
+    // O vetor (0,0,1) indica que o plano é perpendicular ao eixo Z
+    Kernel::Plane_3 plane(0, 0, 1, -z_height);
+
+    // 2. Vetor para armazenar os resultados da intersecção
+    std::vector<Tree::Intersection_and_primitive_id<Kernel::Plane_3>::Type> intersections;
+    
+    // 3. Intersecção eficiente usando a AABB Tree
+    tree.all_intersections(plane, std::back_inserter(intersections));
+
+    // 4. Filtra apenas os segmentos de reta encontrados
+    std::vector<Kernel::Segment_3> segments;
+    for (const auto& inter : intersections) {
+        // O resultado da intersecção está no first (um boost::variant)
+        // Tentamos extrair um segmento dele
+        if (const Kernel::Segment_3* s = boost::get<Kernel::Segment_3>(&(inter.first))) {
+            segments.push_back(*s);
+        }
+    }
+
+    return joinSegments(segments, scale);
 }
 
 size_t MetalSlicer::getFaceCount() const {
