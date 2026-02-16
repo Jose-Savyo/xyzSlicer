@@ -1,5 +1,4 @@
-
-xyzSlicer - WAAM Engine 🛠️⚡
+# xyzSlicer - WAAM Engine 🛠️⚡
 
 xyzSlicer é um fatiador geométrico de alto desempenho desenvolvido para Manufatura Aditiva a Arco Elétrico (WAAM). O projeto foca na geração de trajetórias para robôs de deposição metálica, integrando algoritmos de geometria computacional para garantir precisão e robustez industrial.
 🚀 Estado Atual do Projeto
