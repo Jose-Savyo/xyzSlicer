@@ -41,6 +41,14 @@ public:
     // Une os segmentos gerados e limpa a geometria
     Clipper2Lib::Paths64 joinSegments(const std::vector<Kernel::Segment_3>& segments, double scale);
 
+    // Preenchimento concentrico
+    Clipper2Lib::Paths64 generateConcentricInfill(
+    const Clipper2Lib::Paths64& boundary, 
+    double bead_width,   // Largura do cordão (ex: 5.0mm)
+    double overlap_pct,  // Sobreposição (ex: 0.7 para 70%)
+    double oversize,     // Material extra para usinagem (ex: 1.5mm)
+    double scale);
+
 private:
     Mesh mesh;
     Tree tree;

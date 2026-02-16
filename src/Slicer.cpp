@@ -84,6 +84,41 @@ Clipper2Lib::Paths64 MetalSlicer::sliceLayer(double z_height, double scale) {
     return joinSegments(segments, scale);
 }
 
+Clipper2Lib::Paths64 MetalSlicer::generateConcentricInfill(
+    const Clipper2Lib::Paths64& boundary, 
+    double bead_width,   // Largura do cordão (ex: 5.0mm)
+    double overlap_pct,  // Sobreposição (ex: 0.7 para 70%)
+    double oversize,     // Material extra para usinagem (ex: 1.5mm)
+    double scale) 
+{
+    Paths64 current_layer;
+    
+    // PASSO 1: Aplicar Sobremetal (Oversizing)
+    // Isso expande as paredes externas e contrai as internas (buracos)
+    current_layer = InflatePaths(boundary, oversize * scale, 
+                                 JoinType::Miter, EndType::Polygon);
+
+    Paths64 all_trajectories;
+    Paths64 last_offset = current_layer;
+    
+    // Adicionamos o primeiro contorno (já com sobremetal)
+    all_trajectories.insert(all_trajectories.end(), last_offset.begin(), last_offset.end());
+
+    // PASSO 2: Gerar anéis concêntricos
+    // O passo do offset considera a largura do cordão e a sobreposição experimental
+    double step = -bead_width * (1.0 - overlap_pct) * scale;
+
+    while (true) {
+        last_offset = InflatePaths(last_offset, step, JoinType::Miter, EndType::Polygon);
+        
+        if (last_offset.empty()) break; // Preenchimento completo
+        
+        all_trajectories.insert(all_trajectories.end(), last_offset.begin(), last_offset.end());
+    }
+
+    return all_trajectories;
+}
+
 size_t MetalSlicer::getFaceCount() const {
     return num_faces(mesh);
 }
