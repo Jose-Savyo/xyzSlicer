@@ -19,6 +19,9 @@ The initial stage focused on rapid prototyping and logic validation. Using Pytho
 pip install trimesh shapely numpy
 # Requires ROS 2 Jazzy installed on Ubuntu 24.04
 ```
+
+https://github.com/user-attachments/assets/ab72b78b-6315-4c71-9ba7-0dd9045e8c3f
+
 ### Phase 2: High-Performance C++ Engine (Completed) ✅
 To reach industrial standards used by slicers like **Cura** and **PrusaSlicer**, the project migrated to a C++ architecture. This phase focused on computational efficiency and memory safety through the study of acceleration techniques like **AABB Trees**.
 
