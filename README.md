@@ -68,16 +68,19 @@ This project was built upon the study of existing academic and technical solutio
 2. Layer Probe
    <img width="874" height="296" alt="image" src="https://github.com/user-attachments/assets/3dda0629-0bed-447a-b94b-506053e610dd" />
    Given that macro M1001 (Mach3 VB Script):
-```
-Code "G91"              
-Code "G0 Z2"            
-Code "G90"              
-Code "G38.2 Z-50 F100"  
-While IsMoving()        
-Wend
-Code "G92 Z0"           
-Code "G0 Z5"
-```
+   ```
+   Code "G91"              
+   Code "G0 Z2"
+   Code "M66 P2 L2"            
+   Code "G90"              
+   Code "G38.2 Z-50 F100"  
+   While IsMoving()        
+   Wend
+   Code "G92 Z0"           
+   Code "G0 Z5"
+   ```
+   This macro ensures that every layer increment is made from an external signal that monitors the temperature of the deposited layer via the M66 command, and the layer height increment is also done through the probe, so that variations in bead height do not affect the printing process.
+
 3. Quality: Layer Height
    Since the probe will be used to increment the layer, theoretically the layer height doesn't matter for this, but for process visualization purposes it's important to configure it. In my case, a height of approximately 3mm and a thickness of around 5mm.
    <img width="1197" height="463" alt="image" src="https://github.com/user-attachments/assets/3958632a-53c6-4ae2-8c5d-bb77ea3f8061" />
