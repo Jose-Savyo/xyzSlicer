@@ -59,7 +59,7 @@ mkdir build && cd build
 cmake ..
 make
 ./validator ../STLfiles/body.stl
-``
+``` 
 
 Built-in tools to validate geometry before processing:
 
