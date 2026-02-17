@@ -1,28 +1,65 @@
 # xyzSlicer - WAAM Geometry Engine 🛠️⚡
 
-Unlike conventional plastic (FDM) slicers, this engine is engineered for metal deposition, managing large bead widths and the necessary "oversizing" for post-process machining.
+**xyzSlicer**: Unlike conventional plastic (FDM) slicers, this engine is engineered for metal deposition, managing large bead widths and the necessary "oversizing" for post-process machining.
 
 ---
 
 ## 📚 Research & Foundations
 
-The development of this engine is grounded in a technical study of state-of-the-art slicing algorithms. The core logic for mesh intersection and toolpath sequencing was influenced by benchmarking two prominent implementations from the **MATLAB File Exchange**:
+The development of this engine is grounded in a deep technical study of state-of-the-art slicing algorithms and robotic visualization. 
 
-1.  **slice_stl_create_path** (v4.0.30) by **Sunil Bhandari**: Advanced study on robust STL slicing and path creation techniques.
-2.  **AMebius-slicer** (v0.2.0) by **Wang Jack**: Analysis of STL slicing and G-code generation strategies for 3D printing environments.
+### 1. Prototype Case Study: ROS 2 & Python
+Before the current C++ implementation, a functional prototype was developed using **ROS 2 Jazzy**, **Trimesh**, and **Shapely**. This study served as the "proof of concept" for:
+- Dynamic mesh scaling and translation (Centering and Z-grounding).
+- Multi-pass concentric infill logic using polygon buffering.
+- Real-time visualization of toolpaths using `visualization_msgs/MarkerArray` in RViz2.
 
-By porting and optimizing these concepts into a high-performance **C++ (CGAL/Clipper2)** environment, **xyzSlicer** achieves industrial-grade execution speeds, memory safety, and precision.
+The legacy code (available in the `/legacy` folder) allowed for rapid experimentation with `bead_width` and `stepover` parameters before moving to a high-performance architecture.
+
+
+
+### 2. Academic Benchmarking
+The core logic for robust mesh intersection was also influenced by benchmarking two prominent implementations from the **MATLAB File Exchange**:
+- **slice_stl_create_path** (v4.0.30) by **Sunil Bhandari**.
+- **AMebius-slicer** (v0.2.0) by **Wang Jack**.
 
 ---
 
 ## 🏗️ System Architecture
 
-The project bridges 3D geometric processing with 2D trajectory optimization:
+By porting these concepts into a **C++ (CGAL/Clipper2)** environment, **xyzSlicer** achieves industrial-grade execution speeds:
 
-- **Geometric Back-end:** Powered by [CGAL](https://www.cgal.org/) (Computational Geometry Algorithms Library). It uses an **Exact Predicates Kernel** to eliminate rounding errors during plane-to-mesh intersections.
-- **Trajectory Processing:** Integrated with [Clipper2](https://github.com/AngusJohnson/Clipper2) for polygon union, simplification, and offsetting (inflating/deflating) using 64-bit integer arithmetic.
+- **Geometric Back-end:** Powered by [CGAL](https://www.cgal.org/). Uses an **Exact Predicates Kernel** to eliminate rounding errors during plane-to-mesh intersections.
+- **Trajectory Processing:** Integrated with [Clipper2](https://github.com/AngusJohnson/Clipper2) for polygon union and offsetting using 64-bit integer arithmetic.
 
-🔍 Diagnostics and Telemetry
+---
+
+## 🚀 Key Features
+
+### 1. Accelerated Slicing
+Utilizes **AABB Trees** (Axis-Aligned Bounding Boxes) for spatial indexing, enabling the engine to query intersections across thousands of mesh triangles in milliseconds.
+
+### 2. Machining Allowance (Oversizing)
+Automatic generation of extra material on both external and internal (holes) faces. This ensures sufficient "meat" remains on the part for post-process CNC milling to reach final tolerances.
+
+
+
+---
+
+## 🛠️ Build and Execution
+
+### Prerequisites
+* **Compiler:** GCC 11+ (C++17 support)
+* **Libraries:** CGAL, Clipper2, Boost
+* **Build System:** CMake
+
+### Installation
+```bash
+mkdir build && cd build
+cmake ..
+make
+./validator ../STLfiles/body.stl
+``
 
 Built-in tools to validate geometry before processing:
 
