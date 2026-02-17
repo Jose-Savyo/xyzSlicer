@@ -43,6 +43,7 @@ make
 
 # 4. Run the validator
 ./validator ../STLfiles/body.stl
+```
 
 ### 🏁 Conclusion & Practical Implementation (Phase 3)
 
