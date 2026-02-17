@@ -61,6 +61,36 @@ This project was built upon the study of existing academic and technical solutio
 
     AMebius-slicer by Wang Jack (MATLAB File Exchange).
 
+### Cura Configure
+
+1. Custom FFF printer
+   <img width="837" height="624" alt="image" src="https://github.com/user-attachments/assets/98304ffc-496a-4889-8910-912ecdd2ccf9" />
+2. Layer Probe
+   <img width="874" height="296" alt="image" src="https://github.com/user-attachments/assets/3dda0629-0bed-447a-b94b-506053e610dd" />
+   Given that macro M1001 (Mach3 VB Script):
+```
+Code "G91"              
+Code "G0 Z2"            
+Code "G90"              
+Code "G38.2 Z-50 F100"  
+While IsMoving()        
+Wend
+Code "G92 Z0"           
+Code "G0 Z5"
+```
+3. Quality: Layer Height
+   Since the probe will be used to increment the layer, theoretically the layer height doesn't matter for this, but for process visualization purposes it's important to configure it. In my case, a height of approximately 3mm and a thickness of around 5mm.
+   <img width="1197" height="463" alt="image" src="https://github.com/user-attachments/assets/3958632a-53c6-4ae2-8c5d-bb77ea3f8061" />
+
+4. Walls: Horizontal Expansion and Hole Horizontal Expansion
+   Horizontal expansion will help ensure that the part is printed with extra material for machining: for example, an extra layer will be added for the wall, depending on the configuration, and this affects the part's finish.
+   <img width="1197" height="463" alt="image" src="https://github.com/user-attachments/assets/f1295954-2b27-4a0b-8593-8e6f064ae53a" />
+
+---
+<img width="787" height="519" alt="image" src="https://github.com/user-attachments/assets/642f93c0-82c5-46a4-ae45-caa70029dc58" />
+<img width="787" height="519" alt="image" src="https://github.com/user-attachments/assets/853b1118-5fea-4065-8896-e610a4a111d6" />
+
+
 ---
 👨‍💻 Author
 
