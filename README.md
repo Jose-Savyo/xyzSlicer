@@ -19,27 +19,30 @@ The initial stage focused on rapid prototyping and logic validation. Using Pytho
 pip install trimesh shapely numpy
 # Requires ROS 2 Jazzy installed on Ubuntu 24.04
 ```
-
 ### Phase 2: High-Performance C++ Engine (Completed) ✅
+To reach industrial standards used by slicers like **Cura** and **PrusaSlicer**, the project migrated to a C++ architecture. This phase focused on computational efficiency and memory safety through the study of acceleration techniques like **AABB Trees**.
 
-To reach industrial standards used by slicers like Cura and PrusaSlicer, the project migrated to a C++ architecture. This phase focused on computational efficiency and memory safety.
+* **Key Libraries:**
+    * [CGAL](https://www.cgal.org/): Used for advanced 3D geometry and AABB Trees to accelerate mesh intersections.
+    * [Clipper2](http://www.angusj.com/clipper2/): Used for robust polygon offsetting and infill generation.
+* **Accomplishments:** Implementation of accelerated slicing algorithms and a structure for "Oversizing" (machining allowance).
 
-    Key Libraries:
-
-        CGAL: Used for advanced 3D geometry and AABB Trees (Axis-Aligned Bounding Boxes) to accelerate mesh intersections.
-
-        Clipper2: Used for robust polygon offsetting, union, and infill generation.
-
-    Accomplishments: Implementation of accelerated slicing algorithms and a structure for "Oversizing" (machining allowance) for hybrid manufacturing.
-
-Installation (Phase 2):
-Bash
-
+**Installation & Build (Phase 2):**
+```bash
+# 1. Install system dependencies
 sudo apt install libcgal-dev libboost-all-dev
-# Clone and build Clipper2 from source, then:
+
+# 2. Clone this repository
+git clone [https://github.com/seu-usuario/xyzSlicer.git](https://github.com/seu-usuario/xyzSlicer.git)
+cd xyzSlicer
+
+# 3. Build the engine
 mkdir build && cd build
 cmake ..
 make
+
+# 4. Run the validator
+./validator ../STLfiles/body.stl
 
 ### 🏁 Conclusion & Practical Implementation (Phase 3)
 
