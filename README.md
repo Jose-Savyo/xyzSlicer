@@ -20,7 +20,7 @@ pip install trimesh shapely numpy
 # Requires ROS 2 Jazzy installed on Ubuntu 24.04
 ```
 
-https://github.com/user-attachments/assets/ab72b78b-6315-4c71-9ba7-0dd9045e8c3f
+https://github.com/user-attachments/assets/b4f080d5-0822-4b4c-97be-9f036b1c2ed2
 
 ### Phase 2: High-Performance C++ Engine (Completed) ✅
 To reach industrial standards used by slicers like **Cura** and **PrusaSlicer**, the project migrated to a C++ architecture. This phase focused on computational efficiency and memory safety through the study of acceleration techniques like **AABB Trees**.
